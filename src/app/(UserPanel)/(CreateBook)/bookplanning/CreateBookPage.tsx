@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
 import { dummyBook } from './constants/constant'
-import { ExploredPage, ExploredPageModal } from "./components/ExploredPageModal"
-import { ExploredBook, ExploredBookModal } from './components/ExploredBookModal'
+import { ExploredPageModal } from "./components/ExploredPageModal"
+import { ExploredBookModal } from './components/ExploredBookModal'
 import AddItineraryModal from './components/AddNewItinerary'
 import { RxCrossCircled } from 'react-icons/rx'
 import { useParams } from 'next/navigation'
@@ -87,9 +87,9 @@ const CreateBookPage = () => {
     fetchBook();
   },[])
 
-  const handleSaveBook = async (updatedBook: ExploredBook) => {
+  const handleSaveBook = async (formData: FormData) => {
     try {
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}`, updatedBook, {
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}`, formData, {
         withCredentials: true,
       })
       
@@ -114,9 +114,9 @@ const CreateBookPage = () => {
     }
   }
 
-  const handleSavePage = async (pageId: string, updatedPage: ExploredPage) => {
+  const handleSavePage = async (pageId: string, formData: FormData) => {
     try {
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/page/${pageId}`, updatedPage, 
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/page/${pageId}`, formData, 
         { withCredentials: true }
       )
       if (response.data.success) {
@@ -395,7 +395,7 @@ const CreateBookPage = () => {
             isOpen={!!showPageStatusModal}
             onClose={() => setShowPageStatusModal(null)}
             // page={showPageStatusModal}
-            onSave={(data) => handleSavePage(showPageStatusModal.id, data)}
+            onSave={(formData) => handleSavePage(showPageStatusModal.id, formData)}
           />
         )}
 

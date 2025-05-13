@@ -22,13 +22,13 @@ const Header: React.FC = () => {
 
           {/* Navigation */}
           <nav className="hidden md:flex gap-8 ml-4">
-            {["Home", "Map", "Itinerary", "MyTravelBook"].map((link) => (
+            {["Home", "Map", "Itinerary", "My-Travel-Book"].map((link) => (
               <Link
                 key={link}
                 href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
                 className="relative text-slate-600 font-medium text-lg hover:text-slate-900 transition-colors duration-200 group/nav"
               >
-                {link}
+                {link.replaceAll('-', ' ')}
                 <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover/nav:w-full"></span>
               </Link>
             ))}

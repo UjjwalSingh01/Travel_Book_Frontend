@@ -73,7 +73,7 @@ export const AddToBookModal = ({ isOpen, onClose, itineraryId }: AddToBookModalP
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error("Sign-Up error:", error.response?.data);
+          console.error("Backend error:", error.response?.data);
           setMessage(error.response?.data?.message);
         } else {
           console.error("Unexpected error:", error);
@@ -196,7 +196,8 @@ export const AddToBookModal = ({ isOpen, onClose, itineraryId }: AddToBookModalP
 
       // Simulated API calls
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/page/${selectedPage}/addItinerariesToPage`, 
-        { itineraryId }
+        { itineraryId },
+        { withCredentials: true }
       )
 
       if(response.data.succes){

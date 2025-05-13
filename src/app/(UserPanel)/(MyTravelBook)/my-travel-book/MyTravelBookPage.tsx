@@ -78,7 +78,7 @@ export const MyTravelBookPage: React.FC = () => {
           {/* Pass props to FilterComponents */}
           <FilterComponents selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} />
           
-          <div className="flex justify-center pb-8 max-h-screen overflow-x-hidden scrollbar-hide">
+          <main className="flex justify-center pb-8 max-h-screen overflow-x-hidden scrollbar-hide">
             <div className="w-full mx-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
               {books
                 .filter((book) => book.status === selectedStatus) 
@@ -86,7 +86,7 @@ export const MyTravelBookPage: React.FC = () => {
                 <BookCard key={index} id={book.id} title={book.title} image={book.imageUrl} status={book.status} />
               ))}
             </div>
-          </div>
+          </main>
         </>
       )}
     </div>

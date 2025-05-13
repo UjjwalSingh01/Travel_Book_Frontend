@@ -5,8 +5,8 @@ import axios from 'axios'
 import { useParams } from 'next/navigation'
 import Alert from '@/common_components/Alert'
 import Loading from '@/common_components/Loading'
-import { dummyBook } from '../bookDescription/constants/dummyData'
-import PageComponent from '../bookDescription/components/PageComponent'
+import { dummyBook } from './constants/dummyData'
+import PageComponent from './components/PageComponent'
 
 export interface Itinerary {
   id: string
@@ -37,7 +37,7 @@ export interface Book {
 }
 
 const BookDescriptionPage = () => {
-  const { id }: {id: string} = useParams();
+  const { id }: { id: string } = useParams();
   const [book, setBook] = useState<Book>(dummyBook)
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [showAlert, setShowAlert] = useState<boolean>(false);

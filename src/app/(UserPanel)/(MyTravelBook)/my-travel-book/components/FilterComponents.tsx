@@ -8,7 +8,7 @@ interface FilterProps {
 
 export const FilterComponents: React.FC<FilterProps> = ({ selectedStatus, setSelectedStatus }) => {
   return (
-    <div className="flex gap-4 my-10 py-2 px-10">
+    <section className="flex gap-4 my-10 py-2 px-10">
       <motion.button
         onClick={() => setSelectedStatus("Explored")}
         className={`px-6 py-2 rounded-full text-xl font-semibold transition-colors ${
@@ -34,6 +34,6 @@ export const FilterComponents: React.FC<FilterProps> = ({ selectedStatus, setSel
       >
         Planning
       </motion.button>
-    </div>
+    </section>
   );
 };

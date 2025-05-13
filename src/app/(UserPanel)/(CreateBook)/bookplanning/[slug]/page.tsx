@@ -1,4 +1,4 @@
-import CreateBookPage from './CreateBookPage'
+import CreateBookPage from '../CreateBookPage'
 
 const CreateBook = () => {
   return (

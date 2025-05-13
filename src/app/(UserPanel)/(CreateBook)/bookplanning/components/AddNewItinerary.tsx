@@ -4,6 +4,7 @@ import Loading from "@/common_components/Loading";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { FiTrash2, FiUploadCloud } from "react-icons/fi";
 
 interface AddItineraryModalProps {
   isOpen: boolean;
@@ -18,7 +19,6 @@ const AddNewItineraryModal = ({ isOpen, onClose, selectedPage }: AddItineraryMod
     category: "Attraction",
     latitude: "",
     longitude: "",
-    images: [''],
     tips: "",
     rating: 0,
     experience: {
@@ -26,16 +26,51 @@ const AddNewItineraryModal = ({ isOpen, onClose, selectedPage }: AddItineraryMod
       upVotes: 0,
     }
   });
+  const [images, setImages] = useState<FileList | null>(null);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertType, setAlertType] = useState<'success' | 'error' | 'info' | 'warning'>('info');
   const [message, setMessage] = useState<string>('');
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    setImages(files);
+    const previews = Array.from(files).map(file => URL.createObjectURL(file));
+    setPreviewUrls(previews);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const updatedPreviews = previewUrls.filter((_, i) => i !== index);
+    const updatedFiles = Array.from(images || []).filter((_, i) => i !== index);
+
+    const newFileList = new DataTransfer();
+    updatedFiles.forEach(file => newFileList.items.add(file));
+    setImages(newFileList.files);
+    setPreviewUrls(updatedPreviews);
+  };
+
   const handleSubmit = async() => {
     try {
       setIsLoading(true);
-      // add a new itinerary and coonect it to the selectd page
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/itineraries/${selectedPage}/addNewItinerary`, formData, {
+      const form = new FormData();
+      form.append("title", formData.title);
+      form.append("description", formData.description);
+      form.append("category", formData.category);
+      form.append("latitude", formData.latitude);
+      form.append("longitude", formData.longitude);
+      form.append("tips", formData.tips);
+      form.append("rating", formData.rating.toString());
+      form.append("experienceComment", formData.experience.comment);
+
+      if (images) {
+        Array.from(images).forEach((file) => {
+          form.append("images", file);
+        });
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/itineraries/${selectedPage}/addNewItinerary`, form, {
         withCredentials: true
       })
 
@@ -48,7 +83,8 @@ const AddNewItineraryModal = ({ isOpen, onClose, selectedPage }: AddItineraryMod
 
       setTimeout(() => {
         onClose();
-      })
+      }, 1500)
+
     } catch (error) {
       if (axios.isAxiosError(error)) {
           console.error('Backend error:', error.response?.data);
@@ -169,23 +205,41 @@ const AddNewItineraryModal = ({ isOpen, onClose, selectedPage }: AddItineraryMod
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Image URLs (one per line) <span className="text-gray-400">(optional)</span>
-            </label>
-            <textarea
-              value={formData.images.join("\n")}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  images: e.target.value
-                    .split("\n")
-                    .map((url) => url.trim())
-                    .filter((url) => url),
-                })
-              }
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 h-24 font-mono text-sm"
-              placeholder="https://example.com/image1.jpg\nhttps://example.com/image2.jpg"
-            />
+          <label className="block text-sm font-medium text-gray-700">Upload Images</label>
+            <div className="relative border border-dashed border-gray-400 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 transition">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileChange}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+              <div className="flex flex-col items-center text-gray-600">
+                <FiUploadCloud size={32} />
+                <p className="mt-2 text-sm">Click or drag to upload</p>
+              </div>
+            </div>
+            {previewUrls.length > 0 && (
+              <div className="mt-4 grid grid-cols-3 gap-4">
+                {previewUrls.map((url, index) => (
+                  <div key={index} className="relative group rounded overflow-hidden border">
+                    <img
+                      src={url}
+                      alt={`preview-${index}`}
+                      className="object-cover h-20 w-full rounded group-hover:opacity-75 transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-1 right-1 bg-white rounded-full p-1 text-red-500 shadow-md hover:bg-red-100"
+                      title="Remove"
+                    >
+                      <FiTrash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
 

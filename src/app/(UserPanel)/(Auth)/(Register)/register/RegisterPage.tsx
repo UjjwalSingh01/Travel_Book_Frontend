@@ -66,6 +66,7 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
+      console.log(process.env.NEXT_PUBLIC_API_URL)
       setIsLoading(true);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, formData);
 
