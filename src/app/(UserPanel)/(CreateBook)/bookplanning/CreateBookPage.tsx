@@ -45,8 +45,8 @@ export interface Book {
 }
 
 const CreateBookPage = () => {
-  const { id }: {id: string} = useParams();
-  const [book, setBook] = useState<Book>(dummyBook)
+  const { id }: { id: string } = useParams();
+  const [book, setBook] = useState<Book | null>(null)
   const [showPageModal, setShowPageModal] = useState(false)
   const [newPageTitle, setNewPageTitle] = useState('')
   const [showBookStatusModal, setShowBookStatusModal] = useState(false)
@@ -61,7 +61,9 @@ const CreateBookPage = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/book/${id}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/book/getPlanningBookDescription/${id}`, {
+          withCredentials: true
+        });
 
         if (response.data.success) {
           setBook(response.data.data);
@@ -88,21 +90,25 @@ const CreateBookPage = () => {
   },[])
 
   const handleSaveBook = async (formData: FormData) => {
+    if (!book) return;
+    
     try {
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}`, formData, {
-        withCredentials: true,
-      })
+      setIsLoading(true);
+      
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}/addBookDetails`, formData, 
+        { withCredentials: true, }
+      );
       
       if (response.data.success) {
         setBook(response.data.data);
-        setMessage(response.data.message)
-        setAlertType('success')
-        setShowAlert(true)
+        setMessage(response.data.message || 'Book updated successfully');
+        setAlertType('success');
+        setShowAlert(true);
       } 
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Backend error:', error.response?.data);
-        setMessage(error.response?.data?.message);
+        setMessage(error.response?.data?.message || 'Failed to update book');
       } else {
         console.error('Unexpected error:', error);
         setMessage('An unexpected error occurred');
@@ -116,13 +122,13 @@ const CreateBookPage = () => {
 
   const handleSavePage = async (pageId: string, formData: FormData) => {
     try {
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/page/${pageId}`, formData, 
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/page/${pageId}/addPageDetails`, formData, 
         { withCredentials: true }
       )
       if (response.data.success) {
         setBook(prev => ({
-          ...prev,
-          pages: prev.pages.map(p => p.id === pageId ? response.data.data : p)
+          ...prev!,
+          pages: prev!.pages.map(p => p.id === pageId ? response.data.data : p)
         }))
         setMessage(response.data.message);
         setAlertType('success');
@@ -145,6 +151,8 @@ const CreateBookPage = () => {
 
   // Add new page
   const handleAddPage = async () => {
+    if (!book) return;
+    
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}/addPageToBook`,
         { title: newPageTitle },
@@ -153,8 +161,8 @@ const CreateBookPage = () => {
       
       if (response.data.success) {
         setBook(prev => ({
-          ...prev,
-          pages: [...prev.pages, response.data.data]
+          ...prev!,
+          pages: [...prev!.pages, response.data.data]
         }))
         setShowPageModal(false)
         setNewPageTitle('')
@@ -179,12 +187,16 @@ const CreateBookPage = () => {
 
   // Delete page
   const handleDeletePage = async (pageId: string) => {
+    if (!book) return;
+
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}/deletePageFromBook/${pageId}`)
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}/deletePageFromBook/${pageId}`, {
+        withCredentials: true
+      })
       if (response.data.success) {
         setBook(prev => ({
-          ...prev,
-          pages: prev.pages.filter(page => page.id !== pageId)
+          ...prev!,
+          pages: prev!.pages.filter(page => page.id !== pageId)
         }))
         setMessage(response.data.message);
         setAlertType('success');
@@ -208,14 +220,14 @@ const CreateBookPage = () => {
   // Delete itinerary
   const handleDeleteItinerary = async (pageId: string, itineraryId: string) => {
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/page/${pageId}/itineraries/${itineraryId}`, 
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/page/${pageId}/itinerary/${itineraryId}`, 
         { withCredentials: true }
       )
   
       if (response.data.success) {
         setBook(prev => ({
-          ...prev,
-          pages: prev.pages.map(p => 
+          ...prev!,
+          pages: prev!.pages.map(p => 
             p.id === pageId ? {
               ...p,
               itineraries: p.itineraries.filter(i => i.id !== itineraryId)
@@ -241,6 +253,18 @@ const CreateBookPage = () => {
     }
   }
 
+  if (isLoading) {
+    return <Loading />
+  }
+
+  if (!book) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-red-500">Failed to load book data</p>
+      </div>
+    )
+  }
+
   return (
     <div className="relative overflow-y-auto scrollbar-hide min-h-screen bg-gray-50 p-8">
       {(showAlert) && (
@@ -253,13 +277,10 @@ const CreateBookPage = () => {
         />
       )}
 
-      {isLoading ? (
-        <Loading />
-      ) : (
       <>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">{book.title}</h1>
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-5">{book.title}</h1>
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowBookStatusModal(true)}
@@ -282,7 +303,7 @@ const CreateBookPage = () => {
 
       {/* Pages List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {book.pages.map(page => (
+        {book.pages?.length > 0 && book.pages.map(page => (
           <motion.div
             key={page.id}
             layout
@@ -408,7 +429,6 @@ const CreateBookPage = () => {
         )}
       </AnimatePresence>
       </>
-      )}
     </div>
   )
 }

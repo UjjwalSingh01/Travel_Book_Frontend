@@ -1,18 +1,15 @@
 import React from "react";
-import imageUrl from "@/assets/hero_image.png"
 import { Highlight } from "../ItineraryDescriptionPage";
 
-const HighlightCard: React.FC<Highlight> = ({
-  image,
-}) => {
+const HighlightCard: React.FC<Highlight> = ({ image }) => {
   return (
-    <div className="w-full h-full md:w-1/3 p-4">
-      <div className="relative rounded-xl overflow-hidden shadow-lg h-full flex flex-col">
-        <div className="relative h-[70%] overflow-hidden">
-          <img 
-            src={imageUrl.src}
-            alt={'Image'} 
-            className="w-full h-full object-cover rounded-xl transition-transform duration-300 transform hover:scale-110" 
+    <div className="w-full sm:w-80 md:w-96 max-w-full p-2">
+      <div className="rounded-xl overflow-hidden shadow-lg h-full bg-white">
+        <div className="relative h-60 overflow-hidden">
+          <img
+            src={image?.[0] || "/placeholder.jpg"}
+            alt="Highlight"
+            className="w-full h-full object-cover transition-transform duration-300 transform hover:scale-105"
           />
         </div>
       </div>
@@ -21,6 +18,7 @@ const HighlightCard: React.FC<Highlight> = ({
 };
 
 export default HighlightCard;
+
 
 // const HighlightCard: React.FC<Highlight> = ({
 //   image,

@@ -8,14 +8,19 @@ interface HighlightSectionProps {
 
 const HighlightSection: React.FC<HighlightSectionProps> = ({ highlights }) => {
   return (
-    <div className="bg-gray-900 h-[80vh] text-white py-16 px-8 rounded-xl mb-10">
-      <div>
-        <h2 className="text-5xl font-bold text-center mb-10">Highlights</h2>
-      </div>
-      <div className="flex flex-col md:flex-row h-[80%] gap-6 justify-center items-stretch overflow-y-auto scrollbar-hide">
-        {highlights.map((highlight, index) => (
-          <HighlightCard key={index} image={highlight.image} />
-        ))}
+    <div className="bg-gray-900 text-white py-12 px-4 sm:px-6 md:px-10 lg:px-16 rounded-xl mb-10">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-10">
+        Highlights
+      </h2>
+
+      <div className="flex flex-wrap justify-center gap-6">
+        {Array.isArray(highlights) && highlights.length > 0 ? (
+          highlights.map((highlight, index) => (
+            <HighlightCard key={index} image={highlight.image} />
+          ))
+        ) : (
+          <p className="text-gray-400 text-center">No highlights available.</p>
+        )}
       </div>
     </div>
   );

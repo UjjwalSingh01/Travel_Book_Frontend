@@ -42,13 +42,21 @@ export const ExploredBookModal = ({ isOpen, onClose, onSave }: BookDetailsModalP
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
     const formData = new FormData()
     formData.append('title', title)
     formData.append('description', description)
     formData.append('visibility', visibility)
     formData.append('status', status)
-    formData.append('tags', tags) // backend should split it
-    if (image) formData.append('image', image)
+
+    // Convert tags input to array
+    const tagsArray = tags
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0);
+    formData.append('tags', JSON.stringify(tagsArray));
+    
+    if (image) formData.append('image', image);
 
     onSave(formData)
     onClose()

@@ -13,9 +13,9 @@ const ExperienceSection: React.FC<Props> = ({ experiences, itineraryId }) => {
   const [newExperience, setNewExperience] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAllExperiences, setShowAllExperiences] = useState(false);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [alertType, setAlertType] = useState<'success' | 'error' | 'info' | 'warning'>('info');
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async () => {
     if (!newExperience.trim() || isSubmitting) return;
@@ -27,21 +27,14 @@ const ExperienceSection: React.FC<Props> = ({ experiences, itineraryId }) => {
         { withCredentials: true }
       );
 
-      if(response.data.success){
-        setMessage(response.data.message)
+      if (response.data.success) {
+        setMessage(response.data.message);
         setAlertType('success');
         setShowAlert(true);
         setNewExperience('');
       }
-      
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Backend error:', error.response?.data);
-        setMessage(error.response?.data?.message);
-      } else {
-        console.error('Unexpected error:', error);
-        setMessage('An unexpected error occurred');
-      }
+      setMessage('Something went wrong');
       setAlertType('error');
       setShowAlert(true);
     } finally {
@@ -49,44 +42,10 @@ const ExperienceSection: React.FC<Props> = ({ experiences, itineraryId }) => {
     }
   };
 
-  const toggleUpVote = async() => {
-    try {
-      setIsSubmitting(true);
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/itinerary/${itineraryId}/toggleUpvote`, {
-        withCredentials: true,
-      })
-
-      if(response.data.succes){
-        setMessage(response.data.message);
-        setAlertType('success');
-        setShowAlert(true);
-      }
-
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Backend error:', error.response?.data);
-        setMessage(error.response?.data?.message);
-      } else {
-        console.error('Unexpected error:', error);
-        setMessage('An unexpected error occurred');
-      }
-      setAlertType('error');
-      setShowAlert(true);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      {(showAlert) && (
-        <Alert
-          message={message} 
-          type={alertType} 
-          onClose={() => {
-            setShowAlert(false);
-          }}
-        />
+    <div className="p-4 sm:p-6 md:p-10 max-w-4xl mx-auto">
+      {showAlert && (
+        <Alert message={message} type={alertType} onClose={() => setShowAlert(false)} />
       )}
 
       <h2 className="text-3xl font-bold text-slate-800 mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">
@@ -94,7 +53,7 @@ const ExperienceSection: React.FC<Props> = ({ experiences, itineraryId }) => {
       </h2>
 
       <div className="mb-8">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <input
             type="text"
             placeholder="Share your travel experience..."
@@ -129,9 +88,7 @@ const ExperienceSection: React.FC<Props> = ({ experiences, itineraryId }) => {
               <div className="flex-1">
                 <h3 className="font-bold text-slate-800">{exp.user.name}</h3>
                 <p className="mt-2 text-slate-600">{exp.experience}</p>
-                <div className="mt-3 flex items-center gap-4 text-slate-500">
-                  <span>{exp.upVotes} likes</span>
-                </div>
+                <div className="mt-3 text-slate-500">{exp.upVotes} likes</div>
               </div>
             </div>
           </div>
@@ -143,15 +100,7 @@ const ExperienceSection: React.FC<Props> = ({ experiences, itineraryId }) => {
           onClick={() => setShowAllExperiences(!showAllExperiences)}
           className="mt-6 w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:shadow-md flex items-center justify-center gap-2"
         >
-          {showAllExperiences ? (
-            <>
-              <FaChevronUp className="text-sm" /> Show Less
-            </>
-          ) : (
-            <>
-              <FaChevronDown className="text-sm" /> Show All Experiences
-            </>
-          )}
+          {showAllExperiences ? <><FaChevronUp className="text-sm" /> Show Less</> : <><FaChevronDown className="text-sm" /> Show All Experiences</>}
         </button>
       )}
     </div>

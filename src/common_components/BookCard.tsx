@@ -10,10 +10,17 @@ interface BookCardProps {
   addedBy?: string;
 }
 
-const BookCard: React.FC<BookCardProps> = ({ id, title, image, status, visibility, addedBy }) => {
+const BookCard: React.FC<BookCardProps> = ({
+  id,
+  title,
+  image,
+  status,
+  visibility,
+  addedBy,
+}) => {
   return (
     <Link
-      href={status === "Explored" ? `/bookdescription/${id}` : `/bookplanning/${id}`} 
+      href={status === "Explored" ? `/bookdescription/${id}` : `/bookplanning/${id}`}
       className="block"
     >
       <motion.div
@@ -23,50 +30,53 @@ const BookCard: React.FC<BookCardProps> = ({ id, title, image, status, visibilit
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className="relative group w-64 h-80 md:w-72 md:h-96 rounded-xl overflow-hidden shadow-2xl hover:shadow-xl cursor-pointer"
+        className="relative group w-full max-w-[270px] sm:max-w-[300px] md:max-w-[320px] aspect-[3/4] rounded-xl overflow-hidden shadow-lg hover:shadow-2xl cursor-pointer transition-all mx-auto"
       >
-        {/* Image Section */}
+        {/* Image */}
         <motion.div
           className="absolute inset-0"
           initial={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          whileHover={{ scale: 1.08 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <img
             src={image}
             alt={title}
-            className="w-full h-full object-cover"
             loading="lazy"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-gray-900/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
         </motion.div>
 
-        {/* Content Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-          <div className="flex flex-col gap-2">
+        {/* Overlay Content */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 z-10">
+          <div className="flex flex-col gap-1 md:gap-2">
             {/* Status Badge */}
-            {visibility && (<motion.span
-              className="self-start px-3 py-1 rounded-full text-sm font-medium"
-              style={{
-                backgroundColor: status === "Explored" ? "#4CAF50" : "#2196F3",
-                color: "white"
-              }}
-              whileHover={{ scale: 1.05 }}
-            >
-              {status}
-            </motion.span>)}
-            
-            {/* Title and Author */}
+            {visibility && (
+              <motion.span
+                className="self-start px-3 py-1 rounded-full text-xs md:text-sm font-medium"
+                style={{
+                  backgroundColor: status === "Explored" ? "#4CAF50" : "#2196F3",
+                  color: "white",
+                }}
+                whileHover={{ scale: 1.05 }}
+              >
+                {status}
+              </motion.span>
+            )}
+
+            {/* Title */}
             <motion.h3
-              className="text-2xl md:text-3xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
-              whileHover={{ x: 5 }}
-              transition={{ type: "spring" }}
+              className="text-lg md:text-xl font-bold text-white drop-shadow-md leading-tight"
+              whileHover={{ x: 4 }}
+              transition={{ type: "spring", stiffness: 200 }}
             >
               {title}
             </motion.h3>
-            
+
+            {/* Added By (optional) */}
             {addedBy && (
-              <p className="text-sm text-gray-200 font-medium">
+              <p className="text-xs md:text-sm text-gray-300 font-medium">
                 Added by: {addedBy}
               </p>
             )}
@@ -75,10 +85,10 @@ const BookCard: React.FC<BookCardProps> = ({ id, title, image, status, visibilit
 
         {/* Hover Border Effect */}
         <motion.div
-          className="absolute inset-0 border-2 border-transparent"
+          className="absolute inset-0 border-2 border-transparent rounded-xl"
           whileHover={{
-            borderColor: "rgba(96, 165, 250, 0.3)",
-            transition: { duration: 0.3 }
+            borderColor: "rgba(96, 165, 250, 0.4)",
+            transition: { duration: 0.3 },
           }}
         />
       </motion.div>

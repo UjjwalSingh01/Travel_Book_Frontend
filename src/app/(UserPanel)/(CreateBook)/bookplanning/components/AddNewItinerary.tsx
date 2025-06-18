@@ -22,7 +22,7 @@ const AddNewItineraryModal = ({ isOpen, onClose, selectedPage }: AddItineraryMod
     tips: "",
     rating: 0,
     experience: {
-      comment: '',
+      comment: "",
       upVotes: 0,
     }
   });
@@ -51,15 +51,17 @@ const AddNewItineraryModal = ({ isOpen, onClose, selectedPage }: AddItineraryMod
     setPreviewUrls(updatedPreviews);
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     try {
+      e.preventDefault();
       setIsLoading(true);
       const form = new FormData();
+
       form.append("title", formData.title);
       form.append("description", formData.description);
       form.append("category", formData.category);
-      form.append("latitude", formData.latitude);
-      form.append("longitude", formData.longitude);
+      form.append("latitude", formData.latitude.toString());
+      form.append("longitude", formData.longitude.toString());
       form.append("tips", formData.tips);
       form.append("rating", formData.rating.toString());
       form.append("experienceComment", formData.experience.comment);
@@ -70,7 +72,8 @@ const AddNewItineraryModal = ({ isOpen, onClose, selectedPage }: AddItineraryMod
         });
       }
 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/itineraries/${selectedPage}/addNewItinerary`, form, {
+      console.log(form);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/itinerary/${selectedPage}/addNewItinerary`, form, {
         withCredentials: true
       })
 
@@ -79,16 +82,15 @@ const AddNewItineraryModal = ({ isOpen, onClose, selectedPage }: AddItineraryMod
         setMessage(response.data.message);
         setAlertType('success');
         setShowAlert(true);
+        setTimeout(() => {
+          onClose();
+        }, 1500)
       }
 
-      setTimeout(() => {
-        onClose();
-      }, 1500)
-
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+        if (axios.isAxiosError(error)) {
           console.error('Backend error:', error.response?.data);
-          setMessage(error.response?.data?.message || 'Failed to Fetch Your Books. Please try again.');
+          setMessage(error.response?.data?.message);
         } else {
           console.error('Unexpected error:', error);
           setMessage('An unexpected error occurred');

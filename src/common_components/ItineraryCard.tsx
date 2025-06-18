@@ -36,19 +36,19 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 }) => {
   const router = useRouter();
 
-  const handleToggleWishlist = async() => {
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/`, id, {
-        withCredentials: true,
-      })
+  // const handleToggleWishlist = async() => {
+  //   try {
+  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/`, id, {
+  //       withCredentials: true,
+  //     })
 
-      if(response.data.success){
+  //     if(response.data.success){
 
-      }
-    } catch (error) {
+  //     }
+  //   } catch (error) {
       
-    }
-  }
+  //   }
+  // }
 
   return (
     <motion.div

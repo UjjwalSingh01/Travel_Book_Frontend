@@ -18,8 +18,8 @@ export interface Book {
 }
 
 export const MyTravelBookPage: React.FC = () => {
-  const [selectedStatus, setSelectedStatus] = useState<"Explored" | "Planning">("Explored")
-  const [books, setBooks] = useState<Book[]>(bookCardsData)
+  const [selectedStatus, setSelectedStatus] = useState<"Explored" | "Planning">("Explored");
+  const [books, setBooks] = useState<Book[]>(bookCardsData);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertType, setAlertType] = useState<'success' | 'error' | 'info' | 'warning'>('info');
@@ -37,7 +37,7 @@ export const MyTravelBookPage: React.FC = () => {
           setMessage(response.data.message);
           setAlertType('success');
           setShowAlert(true);
-        } 
+        }
 
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -54,18 +54,16 @@ export const MyTravelBookPage: React.FC = () => {
       }
     }
 
-    fetchBooks()
-  }, [])
+    fetchBooks();
+  }, []);
 
   return (
-    <div className="px-5 pt-8 min-h-screen">
-      {(showAlert) && (
+    <div className="px-4 sm:px-6 lg:px-12 pt-8 min-h-screen bg-gray-50">
+      {showAlert && (
         <Alert
           message={message}
           type={alertType}
-          onClose={() => {
-            setShowAlert(false);
-          }}
+          onClose={() => setShowAlert(false)}
         />
       )}
 
@@ -73,22 +71,34 @@ export const MyTravelBookPage: React.FC = () => {
         <Loading />
       ) : (
         <>
-          <SearchBar />
-          
-          {/* Pass props to FilterComponents */}
-          <FilterComponents selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} />
-          
-          <main className="flex justify-center pb-8 max-h-screen overflow-x-hidden scrollbar-hide">
-            <div className="w-full mx-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
+          <div className="mb-6">
+            <SearchBar />
+          </div>
+
+          <div className="mb-8">
+            <FilterComponents
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+            />
+          </div>
+
+          <main className="pb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-12 max-w-[1600px] mx-auto">
               {books
-                .filter((book) => book.status === selectedStatus) 
-                .map((book, index) => (
-                <BookCard key={index} id={book.id} title={book.title} image={book.imageUrl} status={book.status} />
+                .filter((book) => book.status === selectedStatus)
+                .map((book) => (
+                  <BookCard
+                    key={book.id}
+                    id={book.id}
+                    title={book.title}
+                    image={book.imageUrl}
+                    status={book.status}
+                  />
               ))}
             </div>
           </main>
         </>
       )}
     </div>
-  )
-}
+  );
+};

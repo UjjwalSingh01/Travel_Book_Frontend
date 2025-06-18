@@ -60,6 +60,7 @@ export const AddToBookModal = ({ isOpen, onClose, itineraryId }: AddToBookModalP
 
   useEffect(() => {
     const fetchData = async() => {
+      setIsLoading(true);
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/book/getBookWithPages`, {
           withCredentials: true,
@@ -86,7 +87,9 @@ export const AddToBookModal = ({ isOpen, onClose, itineraryId }: AddToBookModalP
       }
     }
 
-    fetchData();
+    if (isOpen) {
+      fetchData();
+    }
   }, [isOpen]);
 
   const handlePageSelect = (pageId: string) => {

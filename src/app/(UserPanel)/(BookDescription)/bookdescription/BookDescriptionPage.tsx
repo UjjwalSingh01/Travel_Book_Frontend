@@ -37,8 +37,9 @@ export interface Book {
 }
 
 const BookDescriptionPage = () => {
-  const { id }: { id: string } = useParams();
-  const [book, setBook] = useState<Book>(dummyBook)
+  const params = useParams();
+  const id = params.slug as string;
+  const [book, setBook] = useState<Book | null>(null)
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertType, setAlertType] = useState<'success' | 'error' | 'info' | 'warning'>('info');
