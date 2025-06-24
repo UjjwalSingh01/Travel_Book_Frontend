@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { bookCardsData } from './constants/constant';
 import { FilterComponents } from './components/FilterComponents';
 import axios from 'axios';
 import Alert from '@/common_components/Alert';
@@ -19,7 +18,7 @@ export interface Book {
 
 export const MyTravelBookPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<"Explored" | "Planning">("Explored");
-  const [books, setBooks] = useState<Book[]>(bookCardsData);
+  const [books, setBooks] = useState<Book[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertType, setAlertType] = useState<'success' | 'error' | 'info' | 'warning'>('info');
@@ -84,7 +83,7 @@ export const MyTravelBookPage: React.FC = () => {
 
           <main className="pb-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-12 max-w-[1600px] mx-auto">
-              {books
+              {books ? (books
                 .filter((book) => book.status === selectedStatus)
                 .map((book) => (
                   <BookCard
@@ -94,7 +93,7 @@ export const MyTravelBookPage: React.FC = () => {
                     image={book.imageUrl}
                     status={book.status}
                   />
-              ))}
+              ))): null}
             </div>
           </main>
         </>

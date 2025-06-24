@@ -53,23 +53,25 @@ const Login: React.FC = () => {
       );
 
       if(response.data.success){
-        await checkAuth();
-
         setMessage(response.data.message);
         setAlertType("success");
         setShowAlert(true);
-        localStorage.setItem("userName", response.data.user.name);
-        localStorage.setItem("userRole", response.data.user.roles);
+        localStorage.setItem("userName", response.data.data.name);
+        localStorage.setItem("userEmail", response.data.data.email);
+        localStorage.setItem("userRoles", response.data.data.roles);
 
+        console.log(response.data.data);
         setFormData({
           email: "",
           password: ""
         })
+
+        await checkAuth();
       }
       
       setTimeout(() => {
         setOpen(false);
-      }, 2000);
+      }, 1000);
 
     } catch (error) {
       if (axios.isAxiosError(error)) {

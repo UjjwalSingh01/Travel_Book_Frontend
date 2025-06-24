@@ -29,6 +29,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         withCredentials: true
       })
       setUser(response.data.data);
+      
+      localStorage.setItem("userName", response.data.data.name);
+      localStorage.setItem("userEmail", response.data.data.email);
+      localStorage.setItem("userRoles", response.data.data.roles);
+
     } catch (error) {
       setUser(null)
     } 
@@ -62,11 +67,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       // Clear client-side storage
       localStorage.removeItem("userName");
-      localStorage.removeItem("userRole");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userRoles");
       setUser(null);
       
       // Force refresh to clear any cached data
-      router.refresh();
+      // router.refresh();
       router.push('/');
 
     } catch (error) {

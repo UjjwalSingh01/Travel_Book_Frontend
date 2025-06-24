@@ -1,6 +1,6 @@
 import { Book } from "../CreateBookPage";
 
-export const dummyBook: Book = {
+export const dummyBook = {
   _id: '1',
   title: 'European Adventure',
   status: 'Planning',
@@ -11,7 +11,7 @@ export const dummyBook: Book = {
       status: 'Planning',
       itineraries: [
         {
-          _id: 'i1',
+          id: 'i1',
           title: 'Eiffel Tower Visit',
           category: 'Attraction',
           location: { latitude: 48.8584, longitude: 2.2945 },

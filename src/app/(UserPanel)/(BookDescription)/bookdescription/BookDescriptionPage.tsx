@@ -5,7 +5,6 @@ import axios from 'axios'
 import { useParams } from 'next/navigation'
 import Alert from '@/common_components/Alert'
 import Loading from '@/common_components/Loading'
-import { dummyBook } from './constants/dummyData'
 import PageComponent from './components/PageComponent'
 
 export interface Itinerary {

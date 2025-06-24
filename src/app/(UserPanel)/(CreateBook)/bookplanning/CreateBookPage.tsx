@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
-import { dummyBook } from './constants/constant'
 import { ExploredPageModal } from "./components/ExploredPageModal"
 import { ExploredBookModal } from './components/ExploredBookModal'
 import AddItineraryModal from './components/AddNewItinerary'

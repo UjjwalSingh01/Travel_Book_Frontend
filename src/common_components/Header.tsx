@@ -2,15 +2,17 @@
 
 import React, { useState } from "react";
 import { BiBell } from "react-icons/bi";
-import { MdOutlineMenuOpen, MdClose } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import { CgMenu } from "react-icons/cg";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Login from "@/app/(UserPanel)/(Auth)/(Login)/Login/Login";
+import { useAuth } from "@/context/AuthContext";
+import { LuLogOut } from "react-icons/lu";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-
+  const { logout, user } = useAuth();
   const navLinks = ["Home", "Map", "Itinerary", "My-Travel-Book"];
 
   return (
@@ -58,12 +60,18 @@ const Header: React.FC = () => {
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-slate-50"></div>
             </div>
             <div className="flex flex-col -space-y-1">
-              <p className="text-sm font-semibold text-slate-800">Traveller</p>
+              <p className="text-sm font-semibold text-slate-800">{user?.name}</p>
             </div>
           </div>
 
           {/* Login Button */}
-          <Login />
+          {user ? (
+            isMenuOpen ? (
+              <LuLogOut onClick={logout} size={26} />
+            ) : null
+          ) : (
+            <Login />
+          )}
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
@@ -137,7 +145,7 @@ const Header: React.FC = () => {
                     >
                       <Link
                         href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
-                        className="px-4 py-3 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 flex items-center"
+                        className="px-4 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 flex items-center"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <span className="text-lg font-medium">{link.replaceAll("-", " ")}</span>
@@ -163,9 +171,15 @@ const Header: React.FC = () => {
                       <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-white" />
                     </div>
                     <div className="flex flex-col -space-y-1">
-                      <p className="text-sm font-semibold text-slate-800">Diti Abhir</p>
+                      <p className="text-sm font-semibold text-slate-800">{user?.name}</p>
                     </div>
                   </div>
+                  <button
+                    onClick={logout}
+                    className="mt-6 border-t border-slate-200 w-full text-left pt-5"
+                  >
+                    Sign Out
+                  </button>
                 </motion.div>
               </div>
             </motion.div>
