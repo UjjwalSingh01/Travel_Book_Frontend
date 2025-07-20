@@ -8,6 +8,7 @@ import { quotes } from "./constants/constants";
 import Loading from "@/common_components/Loading";
 import Link from "next/link";
 import Alert from "@/common_components/Alert";
+import GoogleAuthButton from "@/common_components/GoogleAuthButton";
 
 export interface FormData {
   firstName: string;
@@ -128,8 +129,8 @@ const RegisterPage: React.FC = () => {
       </div>
 
       {/* Right Section */}
-      <div className="flex w-full md:w-3/5 xl:w-1/2 justify-center items-center bg-gray-100">
-        <form className="w-[90%] p-8" onSubmit={handleSubmit}>
+      <div className="flex flex-col w-full md:w-3/5 xl:w-1/2 justify-center items-center bg-gray-100">
+        <form className="w-[90%] px-8 pt-8" onSubmit={handleSubmit}>
           <h1 className="text-3xl font-bold text-gray-800 mb-4">Register</h1>
 
           {/* First Name and Surname */}
@@ -275,6 +276,13 @@ const RegisterPage: React.FC = () => {
               Register
             </button>
           </form>
+
+          <div className="flex items-center w-full my-4">
+            <div className="flex-grow border-t border-gray-300"></div>
+            <span className="mx-2 text-sm text-gray-500">OR</span>
+            <div className="flex-grow border-t border-gray-300"></div>
+          </div>
+          <GoogleAuthButton label="Register with Google" />
         </div>
         </>
       )}

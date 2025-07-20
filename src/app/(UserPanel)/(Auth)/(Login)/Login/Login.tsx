@@ -6,6 +6,7 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import Alert from "@/common_components/Alert";
+import GoogleAuthButton from "@/common_components/GoogleAuthButton";
 
   
 export interface LoginType {
@@ -172,6 +173,13 @@ const Login: React.FC = () => {
               LOGIN
             </button>
           </form>
+
+          <div className="flex items-center w-[80%] my-2">
+            <div className="flex-grow border-t border-gray-300"></div>
+            <span className="mx-2 text-sm text-gray-500">OR</span>
+            <div className="flex-grow border-t border-gray-300"></div>
+          </div>
+          <GoogleAuthButton label="Continue with Google" />
 
           <span className="font-montserrat">
             New to Travel Book? {" "}
