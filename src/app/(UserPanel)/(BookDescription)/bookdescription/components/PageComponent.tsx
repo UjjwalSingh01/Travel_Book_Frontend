@@ -49,7 +49,7 @@ const PageComponent: React.FC<PageComponentProps> = ({ page }) => (
           <div className="flex overflow-x-auto pb-4 gap-4">
             {page.itineraries.map((itinerary) => (
               <Link
-                href={`/itinerary/${itinerary.id}`}
+                href={`/itineraryDescription/${itinerary.id}`}
                 key={itinerary.id}
                 className="flex-shrink-0 w-64"
               >

@@ -44,7 +44,7 @@ const VisitedPlacesMap: React.FC<VisitedPlacesMapProps> = ({ places }) => {
       style={{ height: 400, width: "100%", borderRadius: "1rem" }}
     >
       <TileLayer
-        attribution='© <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+        // attribution='© <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {places.map((place) =>
